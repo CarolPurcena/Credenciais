@@ -1,5 +1,7 @@
 import customtkinter
 from PIL import Image
+import DataBase
+from tkinter import messagebox
 
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("dark-blue")
@@ -23,40 +25,56 @@ setores = ("Administrativo", "Atendimento", "Coordenação de Voo", "CTM", "Lava
 
 LogoLabel = customtkinter.CTkLabel(pagina_cadastro, image=logo, text=None)
 
-NomeText = customtkinter.CTkLabel(pagina_cadastro, text='Digite o nome do funcionário:', font=("Arial", 25))
+NomeText = customtkinter.CTkLabel(pagina_cadastro, text='Nome:', font=("Arial", 25))
 
-NomeEntry = customtkinter.CTkEntry(pagina_cadastro, width=325)
+NomeEntry = customtkinter.CTkEntry(pagina_cadastro, width=270, height=8)
 
-EmpresaText = customtkinter.CTkLabel(pagina_cadastro, text="Qual a empresa do funcionário?", font=("Arial", 25))
+EmpresaText = customtkinter.CTkLabel(pagina_cadastro, text="Empresa:", font=("Arial", 25))
 
-EmpresaEntry = customtkinter.CTkOptionMenu(pagina_cadastro, values=empresas, width=325, font=("Arial", 15))
+EmpresaEntry = customtkinter.CTkOptionMenu(pagina_cadastro, values=empresas, width=270, font=("Arial", 15))
 
 SetorText = customtkinter.CTkLabel(pagina_cadastro, text="Setor:", font=("Arial", 25))
 
-SetorEntry = customtkinter.CTkOptionMenu(pagina_cadastro, values=setores, width=325, font=("Arial", 15))
+SetorEntry = customtkinter.CTkOptionMenu(pagina_cadastro, values=setores, width=270, font=("Arial", 15))
 
-Tipo_credencialText = customtkinter.CTkLabel(pagina_cadastro, text="Qual o tipo de credencial?", font=("Arial", 25))
+Tipo_credencialText = customtkinter.CTkLabel(pagina_cadastro, text="Credencial:", font=("Arial", 25))
 
-Tipo_credencialEntry = customtkinter.CTkOptionMenu(pagina_cadastro, values=tipo_credenciais, width=325,  font=("Arial", 15))
+Tipo_credencialEntry = customtkinter.CTkOptionMenu(pagina_cadastro, values=tipo_credenciais, width=270,  font=("Arial", 15))
 
-ValidadeText = customtkinter.CTkLabel(pagina_cadastro, text="Digite a validade:",  font=("Arial", 25))
+ValidadeText = customtkinter.CTkLabel(pagina_cadastro, text="Validade:",  font=("Arial", 25))
 
-ValidadeEntry = customtkinter.CTkEntry(pagina_cadastro, width=325)
+ValidadeEntry = customtkinter.CTkEntry(pagina_cadastro, width=270, font=("Arial", 15))
 
+def Cadastrar_credencial():
+    Nome = NomeEntry.get()
+    Empresa = EmpresaEntry.get()
+    Setor = SetorEntry.get()
+    Tipo_de_credencial = Tipo_credencialEntry.get()
+    Validade = ValidadeEntry.get()
+
+    DataBase.cursor.execute("""
+    INSERT INTO Credenciais(Nome, Empresa, Setor, TipoCredencial, Validade) VALUES(?,?,?,?,?)
+""", (Nome, Empresa, Setor, Tipo_de_credencial, Validade))
+    DataBase.conn.commit()
+    messagebox.showinfo(title="Credencial cadastrada", message="Credencial cadastrada com sucesso!")
+
+
+CadastrarBotao = customtkinter.CTkButton(pagina_cadastro, text="Cadastrar credencial", width=162.5,command=Cadastrar_credencial)
 
 # =============== Widgets na tela ==============
 
-LogoLabel.place(x=285, y=10)
-NomeText.place(x=250, y=190)
-NomeEntry.place(x=250, y=230)
-EmpresaText.place(x=250, y=280)
-EmpresaEntry.place(x=250, y=320)
-SetorText.place(x=250, y=370)
-SetorEntry.place(x=250, y=410)
-Tipo_credencialText.place(x=250, y=460)
-Tipo_credencialEntry.place(x=250, y=500)
-ValidadeText.place(x=250, y=550)
-ValidadeEntry.place(x=250, y=590)
+LogoLabel.place(x=55, y=250)
+NomeText.place(x=350, y=170)
+NomeEntry.place(x=490, y=175)
+EmpresaText.place(x=350, y=240)
+EmpresaEntry.place(x=490, y=240)
+SetorText.place(x=350, y=310)
+SetorEntry.place(x=490, y=310)
+Tipo_credencialText.place(x=350, y=380)
+Tipo_credencialEntry.place(x=490, y=380)
+ValidadeText.place(x=350, y=450)
+ValidadeEntry.place(x=490, y=450)
+CadastrarBotao.place(x=475, y=590)
 
 # ========== Rodar a janela ====================
 pagina_cadastro.mainloop()
